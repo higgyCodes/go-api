@@ -193,6 +193,11 @@ class PositionType(IntEnum):
     LOW = 4
     BOTTOM = 5
 
+class TabNumber(IntEnum):
+    TAB_1 = 1
+    TAB_2 = 2
+    TAB_3 = 3
+
 class RegionSnippet(models.Model):
     region = models.ForeignKey(Region, related_name='snippets', on_delete=models.CASCADE)
     snippet = models.TextField(null=True, blank=True)
@@ -276,6 +281,11 @@ class Event(models.Model):
     is_featured_region = models.BooleanField(default=False, verbose_name='Is Featured on Region Page')
 
     hide_attached_field_reports = models.BooleanField(default=False)
+
+    # Tabs. Events can have upto 3 tabs to organize snippets.
+    tab_one_title = models.CharField(max_length=50, null=False, default='Additional Information')
+    tab_two_title = models.CharField(max_length=50, null=True)
+    tab_three_title = models.CharField(max_length=50, null=True)
 
     class Meta:
         ordering = ('-disaster_start_date',)
@@ -366,6 +376,8 @@ class Snippet(models.Model):
     event = models.ForeignKey(Event, related_name='snippets', on_delete=models.CASCADE)
     visibility = EnumIntegerField(VisibilityChoices, default=3)
     position = EnumIntegerField(PositionType, default=3)
+    tab = EnumIntegerField(TabNumber, default=1)
+
     class Meta:
         ordering = ('position', 'id',)
 
